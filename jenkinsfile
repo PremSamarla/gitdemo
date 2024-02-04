@@ -21,4 +21,44 @@ pipeline {
         }
     }
 }
+-------------------------------------------------------------
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                // Your build steps here, for example:
+                sh 'mvn clean package'
+            }
+        }
+        stage('Test') {
+            steps {
+                // Your test steps here, for example:
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    // SSH connection details
+                    def remoteServer = 'your_server_address'
+                    def remoteUser = 'your_ssh_username'
+                    def remotePwd = 'your_ssh_password' // Alternatively, use SSH keys for authentication
+                    
+                    // Local path of the package to be deployed
+                    def localPackagePath = 'path/to/your/package.jar'
+                    
+                    // Remote path where the package will be deployed
+                    def remotePackagePath = '/path/to/remote/directory'
+                    
+                    // Copying the package to the remote server using SSH
+                    sshagent(['your_ssh_credentials_id']) {
+                        sh "scp -o StrictHostKeyChecking=no ${localPackagePath} ${remoteUser}@${remoteServer}:${remotePackagePath}"
+                    }
+                }
+            }
+        }
+    }
+}
 
