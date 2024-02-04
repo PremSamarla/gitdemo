@@ -1,0 +1,2 @@
+mvn clean package: 	Clears the target directory and Builds the project and packages the resulting JAR file into the target directory.
+mvn install	Builds the project described by your Maven POM file and installs the resulting artifact (JAR) into your local Maven repository
